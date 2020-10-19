@@ -32,7 +32,8 @@ public class MobileController : MonoBehaviour
         }
     }
 
-    private void Start() {
+    private void Start() 
+    {
         navigationInitPosition = navigation.transform.localPosition;
     }
 
@@ -42,7 +43,8 @@ public class MobileController : MonoBehaviour
         Movement();
     }
 
-    public void Movement(){
+    public void Movement()
+    {
         if (Input.GetMouseButtonDown(0))
         {
             if(Input.mousePosition.x > (Screen.width/2))
@@ -77,8 +79,10 @@ public class MobileController : MonoBehaviour
         button.transform.localPosition = Vector2.zero;
     }
 
-    public float GetControllerPosition(){
-        if(navigation.activeSelf){
+    public float GetControllerPosition()
+    {
+        if(navigation.activeSelf)
+        {
             return button.transform.localPosition.x * sensitivity;
         }
 

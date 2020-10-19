@@ -23,8 +23,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private new Rigidbody2D rigidbody2D;
     [SerializeField]
-    private BoxCollider2D boxCollider;
-    [SerializeField]
     private Button jumpBtn = default;
 
     private float speed = 0;
@@ -61,7 +59,6 @@ public class PlayerController : MonoBehaviour
         {
             jumpBtn.interactable = false;
         }
-        
     }
 
     // Update is called once per frame
@@ -78,6 +75,39 @@ public class PlayerController : MonoBehaviour
             Jump();
         }
 
+        CheckVelocity();
+        MovingDirection();
+        AnimationMovement();
+    }
+
+    //Verifica a posição do direcional para esquerda ou direita. Caso o controle esteja no centro e a velocidade for maior que zero, aplica uma aceleração contrária até parar.
+    public void MovingDirection()
+    {
+        if(MobileController.instance.GetControllerPosition() < 0)
+        {
+            speed = Mathf.Max(speed-accel, -maxSpeed);
+            Move(speed*Time.deltaTime, 180);
+        }
+        else if(MobileController.instance.GetControllerPosition() > 0)
+        {
+            speed = Mathf.Min(speed+accel, maxSpeed);
+            Move(speed*Time.deltaTime, 0);
+        }
+        else
+        {
+            speed = speed > 0 ? Mathf.Max(speed-(accel*2), 0) : Mathf.Min(speed+(accel*2), 0);
+        }
+    }
+
+    public void Move(float speed, float angle)
+    {
+        transform.eulerAngles = new Vector3(0, angle, 0);
+        this.transform.position = new Vector2(transform.position.x + speed, transform.position.y);
+    }
+
+    //Checa a intensidade do direcional para determinar se o player irá andar ou correr
+    public void CheckVelocity()
+    {
         if(Mathf.Abs(MobileController.instance.GetControllerPosition()) > 0.03f)
         {
             accel = runAccel;
@@ -88,22 +118,11 @@ public class PlayerController : MonoBehaviour
             accel = walkAccel;
             maxSpeed = maxWalkSpeed;
         }
+    }
 
-        if(MobileController.instance.GetControllerPosition() < 0)
-        {
-            speed = Mathf.Max(speed-accel, -maxSpeed);
-            Walk(speed*Time.deltaTime, 180);
-        }
-        else if(MobileController.instance.GetControllerPosition() > 0)
-        {
-            speed = Mathf.Min(speed+accel, maxSpeed);
-            Walk(speed*Time.deltaTime, 0);
-        }
-        else
-        {
-            speed = speed > 0 ? Mathf.Max(speed-(accel*2), 0) : Mathf.Min(speed+(accel*2), 0);
-        }
-
+    //Toca as animações baseado na velocidade (0 - Idle, 1 - Walk, 2 - Run)
+    public void AnimationMovement()
+    {
         if(speed == 0)
         {
             playerAnimator.SetInteger("speed", 0);
@@ -116,14 +135,6 @@ public class PlayerController : MonoBehaviour
         {
             playerAnimator.SetInteger("speed", 2);
         }
-        
-    }
-
-    public void Walk(float speed, float angle)
-    {
-        
-        transform.eulerAngles = new Vector3(0, angle, 0);
-        this.transform.position = new Vector2(transform.position.x + speed, transform.position.y);
     }
 
     public void Jump()

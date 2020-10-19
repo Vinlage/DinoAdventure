@@ -44,14 +44,10 @@ public class EndGame : MonoBehaviour
 
         if(success)
         {
-            AnalyticsResult analyticsResult = Analytics.CustomEvent("CompletedLevel");
-            Debug.Log("CompletedLevel: " + analyticsResult);
             LevelSuccess();
         }
         else
         {
-            AnalyticsResult analyticsResult = Analytics.CustomEvent("FailedLevel");
-            Debug.Log("FailedLevel: " + analyticsResult);
             LevelFailed();
         }
 
@@ -69,11 +65,17 @@ public class EndGame : MonoBehaviour
         finalMessage.text = "Parabens! Level Concluído.";
         time.text = "Tempo: " + TimeScript.GetFormattedTime();
         Data.instance.SetBestTime(TimeScript.GetTime());
+
+        AnalyticsResult analyticsResult = Analytics.CustomEvent("CompletedLevel");
+        Debug.Log("CompletedLevel: " + analyticsResult);
     }
 
     public void LevelFailed()
     {
         finalMessage.text = "Voce Morreu! Tente novamente.";
         time.text = "Tempo: Não Completado!";
+
+        AnalyticsResult analyticsResult = Analytics.CustomEvent("FailedLevel");
+        Debug.Log("FailedLevel: " + analyticsResult);
     }
 }
