@@ -24,6 +24,10 @@ public class PlayerController : MonoBehaviour
     private new Rigidbody2D rigidbody2D;
     [SerializeField]
     private Button jumpBtn = default;
+    [SerializeField]
+    private AudioClip[] audioClips;
+    [SerializeField]
+    private AudioSource audioSource;
 
     private float speed = 0;
     private float accel = 0;
@@ -141,6 +145,8 @@ public class PlayerController : MonoBehaviour
     {
         if(!jumping)
         {
+            audioSource.clip = audioClips[0];
+            audioSource.Play();
             rigidbody2D.velocity += Vector2.up * jumpMultiplier;
             jumping = true;
             playerAnimator.Play("Player_Jump", 0);
@@ -153,6 +159,7 @@ public class PlayerController : MonoBehaviour
         if(rigidbody2D.velocity.y < 0)
         {
             falling = true;
+            jumping = true;
         }
 
         if(rigidbody2D.velocity.y == 0 && falling)
@@ -167,6 +174,11 @@ public class PlayerController : MonoBehaviour
     {
         if(other.gameObject.layer == 8 || other.gameObject.layer == 10)
         {
+            if(other.gameObject.layer == 10)
+            {
+                audioSource.clip = audioClips[1];
+                audioSource.Play();
+            }
             Die();
         }
     }
@@ -178,7 +190,7 @@ public class PlayerController : MonoBehaviour
         this.enabled = false;
         this.gameObject.transform.parent = null;
 
-        StartCoroutine(EndGame.instance.EndScreenWait(true, false));
+        StartCoroutine(EndGame.instance.EndScreenWait(false));
     }
 
     public Animator GetAnim()

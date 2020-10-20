@@ -17,8 +17,8 @@ public class MobileController : MonoBehaviour
     [SerializeField]
     private float sensitivity = 0.0005f;
     
-    private Vector2 mousePosIni;
-    private Vector2 mousePos;
+    private Vector2 touchPosIni;
+    private Vector2 touchPos;
     private Vector2 buttonPos;
     private Vector2 buttonDistance;
     private Vector2 navigationInitPosition;
@@ -45,31 +45,40 @@ public class MobileController : MonoBehaviour
 
     public void Movement()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.touchCount > 0)
         {
-            if(Input.mousePosition.x > (Screen.width/2))
+            Touch touch = Input.GetTouch(0);
+
+            // Update the Text on the screen depending on current position of the touch each frame
+            if(touch.position.x > (Screen.width/2) || touch.phase == TouchPhase.Ended)
             {
+                print("reset");
+                ResetNavigation();
                 return;
             }
-            moving = true;
-            mousePosIni = Input.mousePosition;
-            navigation.transform.position = mousePosIni;
-        }
-        else if(Input.GetMouseButtonUp(0))
-        {
-            ResetNavigation();
+            else if(touch.phase == TouchPhase.Began)
+            {
+                print("began");
+                moving = true;
+                touchPosIni = touch.position;
+                navigation.transform.position = touchPosIni;
+            }
+
+            if(moving)
+            {
+                touchPos = touch.position;
+                buttonPos = touchPos;
+                buttonDistance = touchPos - touchPosIni;
+                buttonDistance.x = Mathf.Clamp(buttonDistance.x, -limitBtnPosX * Screen.width, limitBtnPosX * Screen.width);
+                buttonPos.x = touchPosIni.x + buttonDistance.x;
+
+                button.transform.position = new Vector2(buttonPos.x, touchPosIni.y);
+            }
         }
 
-        if(moving)
-        {
-            mousePos = Input.mousePosition;
-            buttonPos = mousePos;
-            buttonDistance = mousePos - mousePosIni;
-            buttonDistance.x = Mathf.Clamp(buttonDistance.x, -limitBtnPosX * Screen.width, limitBtnPosX * Screen.width);
-            buttonPos.x = mousePosIni.x + buttonDistance.x;
+        
 
-            button.transform.position = new Vector2(buttonPos.x, mousePosIni.y);
-        }
+        
     }
 
     public void ResetNavigation()

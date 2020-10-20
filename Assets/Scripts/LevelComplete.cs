@@ -10,7 +10,7 @@ public class LevelComplete : MonoBehaviour
             PlayerController.instance.enabled = false;
             PlayerController.instance.GetAnim().Play("Player_Idle", 0);
             PlayerController.instance.GetAnim().speed = 0;
-            StartCoroutine(EndGame.instance.EndScreenWait(false, true));
+            StartCoroutine(EndGame.instance.EndScreenWait(true));
         }
     }
 }

@@ -29,8 +29,9 @@ public class Coin : MonoBehaviour
     {
         if(other.gameObject.layer == 9)
         {
-            Data.instance.CollectCoin();
+            Collectables.instance.CollectCoin();
             particle.Play();
+            Collectables.instance.PlayCoinSound();
             sprite.enabled = false;
             circleCollider.enabled = false;
         }

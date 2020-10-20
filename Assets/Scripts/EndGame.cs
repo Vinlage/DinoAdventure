@@ -28,16 +28,9 @@ public class EndGame : MonoBehaviour
         }
     }
 
-    public IEnumerator EndScreenWait(bool wait, bool success)
+    public IEnumerator EndScreenWait(bool success)
     {
-        if(wait)
-        {
-            yield return new WaitForSeconds(2);
-        }
-        else
-        {
-            yield return null;
-        }
+        yield return new WaitForSeconds(2);
 
         AdsManager.PlayInterstitial();
         Game.instance.DisableAll();
@@ -52,7 +45,7 @@ public class EndGame : MonoBehaviour
         }
 
         coinsTotal.text = "Moedas Totais: " + Data.instance.GetTotalCoinAmount();
-        coinsCollected.text = "Moedas Coletadas: " + Data.instance.GetCoins();
+        coinsCollected.text = "Moedas Coletadas: " + Collectables.instance.coins;
 
         float bestTimeNumber = Data.instance.GetBestTime();
         bestTime.text = bestTimeNumber > 0 ? "Melhor Tempo: " + TimeScript.FormatTime(bestTimeNumber) : "Melhor Tempo: Não Completado!";

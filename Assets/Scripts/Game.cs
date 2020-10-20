@@ -17,6 +17,8 @@ public class Game : MonoBehaviour
     private GameObject coins = default;
     [SerializeField]
     private GameObject timerController = default;
+    [SerializeField]
+    private Collectables collectables = default;
 
     private Vector3 playerSavedPosition = default;
     private Quaternion playerSavedRotation = default;
@@ -41,7 +43,7 @@ public class Game : MonoBehaviour
         InitializeEnemies(true);
         InitializePlatforms(true);
         InitializeCoins(true);
-        Data.instance.InitializeData();
+        collectables.InitializeData();
         timerController.SetActive(true);
 
         //criar um evento analytics jogador começou o nivel

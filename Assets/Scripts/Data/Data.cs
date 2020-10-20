@@ -5,15 +5,7 @@ using TMPro;
 
 public class Data : MonoBehaviour
 {
-
     public static Data instance;
-
-    [SerializeField]
-    private TextMeshProUGUI coinText = default;
-    [SerializeField]
-    private TextMeshProUGUI coinTotalText = default;
-
-    private int coins;
 
     private void Awake() 
     {
@@ -23,27 +15,9 @@ public class Data : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        InitializeData();
-    }
-
-    public void InitializeData()
-    {
-        coins = 0;
-        coinText.text = coins.ToString();
-        coinTotalText.text = GetTotalCoinAmount().ToString();
-    }
-
-    public void CollectCoin()
-    {
-        SetCoinAmount(GetTotalCoinAmount()+1);
-        coins += 1;
-        coinText.text = coins.ToString();
-    }
-
     public void SetBestTime(float time)
     {
+        print("time = " + GetBestTime() );
         if(time < GetBestTime() || GetBestTime() == -1)
         {
             PlayerPrefs.SetFloat("Time", time);
@@ -58,16 +32,11 @@ public class Data : MonoBehaviour
     public void SetCoinAmount(int amount)
     {
         PlayerPrefs.SetInt("CoinAmount", amount);
-        coinTotalText.text = GetTotalCoinAmount().ToString();
+        Collectables.instance.SetTotalCoinsText();
     }
 
     public int GetTotalCoinAmount()
     {
         return PlayerPrefs.GetInt("CoinAmount", 0);
-    }
-
-    public int GetCoins()
-    {
-        return coins;
     }
 }
